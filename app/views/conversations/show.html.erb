@@ -1,0 +1,27 @@
+<%= link_to "← Back to conversations", conversations_path, class: "text-cyan-400 hover:underline mb-4 inline-block" %>
+
+<div class="bg-gray-800 border border-gray-700 rounded-lg p-4 mb-6">
+  <h1 class="text-xl font-bold text-gray-100"><%= @conversation.title %></h1>
+  <p class="text-sm text-gray-400"><%= @messages.count %> messages</p>
+</div>
+
+<div id="messages" class="space-y-4 mb-6">
+  <% @messages.each do |message| %>
+    <div class="<%= message.role == 'user' ? 'bg-cyan-900/30 border-cyan-700' : 'bg-gray-800 border-gray-700' %> border rounded-lg p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="font-medium <%= message.role == 'user' ? 'text-cyan-400' : 'text-green-400' %>">
+          <%= message.role == 'user' ? 'You' : 'AI' %>
+        </span>
+        <span class="text-xs text-gray-500"><%= message.created_at.strftime("%H:%M") %></span>
+      </div>
+      <p class="text-gray-200 whitespace-pre-wrap"><%= message.content %></p>
+    </div>
+  <% end %>
+</div>
+
+<%= form_with model: @message, url: conversation_messages_path(@conversation), class: "bg-gray-800 border border-gray-700 rounded-lg p-4" do |f| %>
+  <div class="mb-3">
+    <%= f.text_area :content, rows: 3, placeholder: "Ask me anything...", class: "bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 w-full text-gray-100", autofocus: true %>
+  </div>
+  <%= f.submit "Send", class: "bg-cyan-600 text-white px-6 py-2 rounded-lg hover:bg-cyan-700 cursor-pointer" %>
+<% end %>

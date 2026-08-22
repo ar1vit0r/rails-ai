@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html class="dark">
+  <head>
+    <title>AI Writing Assistant</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+  <body class="bg-gray-900 text-gray-100">
+    <nav class="bg-gray-800 border-b border-gray-700">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+        <%= link_to "AI Writer", root_path, class: "text-xl font-bold text-cyan-400" %>
+        <div class="flex items-center gap-4">
+          <% if user_signed_in? %>
+            <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "text-gray-300 hover:text-cyan-400" %>
+          <% else %>
+            <%= link_to "Login", new_user_session_path, class: "text-gray-300 hover:text-cyan-400" %>
+            <%= link_to "Sign up", new_user_registration_path, class: "bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700" %>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+    <main class="max-w-7xl mx-auto px-4 py-8">
+      <% if notice %>
+        <p class="bg-green-900/50 text-green-300 border border-green-700 px-4 py-2 rounded mb-4"><%= notice %></p>
+      <% end %>
+      <% if alert %>
+        <p class="bg-red-900/50 text-red-300 border border-red-700 px-4 py-2 rounded mb-4"><%= alert %></p>
+      <% end %>
+      <%= yield %>
+    </main>
+  </body>
+</html>

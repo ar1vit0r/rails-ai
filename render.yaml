@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: rails-ai
+    runtime: ruby
+    plan: free
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "./bin/rails server"
+    envVars:
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: rails-ai-db
+          property: connectionString
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_SERVE_STATIC_FILES
+        value: "true"
+      - key: OPENAI_API_KEY
+        sync: false
+
+databases:
+  - name: rails-ai-db
+    plan: free
+    databaseName: rails_ai_production
