@@ -6,22 +6,70 @@ class MessagesController < ApplicationController
     @message = @conversation.messages.build(role: "user", content: params[:message][:content])
 
     if @message.save
-      ai_response(@conversation)
-      redirect_to @conversation
+      broadcast_user_message(@conversation, @message)
+      stream_ai_response(@conversation)
+      head :ok
     else
-      redirect_to @conversation, alert: "Message could not be saved."
+      render json: { error: "Message could not be saved." }, status: :unprocessable_entity
     end
   end
 
   private
 
-  def ai_response(conversation)
+  def broadcast_user_message(conversation, message)
+    ActionCable.server.broadcast(
+      "conversation_#{conversation.id}",
+      {
+        type: "user_message",
+        html: render_message(message)
+      }
+    )
+  rescue StandardError
+    nil
+  end
+
+  def stream_ai_response(conversation)
     messages = [{ role: "system", content: "You are a helpful AI writing assistant. Be concise and helpful." }]
     messages += conversation.history
 
     ai = AiService.new
-    response = ai.chat(messages)
+    ai_message = conversation.messages.create!(role: "assistant", content: "...")
+    full_text = +""
 
-    conversation.messages.create!(role: "assistant", content: response)
+    ActionCable.server.broadcast(
+      "conversation_#{conversation.id}",
+      { type: "ai_start", message_id: ai_message.id }
+    )
+
+    ai.stream_chat(messages) do |chunk, text|
+      full_text = text
+      ai_message.update_column(:content, full_text)
+
+      ActionCable.server.broadcast(
+        "conversation_#{conversation.id}",
+        {
+          type: "ai_chunk",
+          message_id: ai_message.id,
+          chunk: chunk,
+          html: render_message(ai_message.reload)
+        }
+      )
+    end
+
+    ai_message.update_column(:content, full_text.presence || "...")
+
+    ActionCable.server.broadcast(
+      "conversation_#{conversation.id}",
+      { type: "ai_done", message_id: ai_message.id }
+    )
+  rescue StandardError
+    nil
+  end
+
+  def render_message(message)
+    ApplicationController.renderer.render(
+      partial: "messages/message",
+      locals: { message: message }
+    )
   end
 end

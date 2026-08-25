@@ -1,12 +1,12 @@
 class AiService
   def initialize
-    @use_mock = Rails.env.production? && !Rails.application.credentials.openai_api_key.present? && !ENV["OPENAI_API_KEY"].present?
+    @use_mock = !ENV["OPENAI_API_KEY"].present?
   end
 
   def chat(messages)
     return mock_response(messages) if @use_mock
 
-    client = OpenAI::Client.new(access_token: ENV["OPENAI_API_KEY"])
+    client = OpenAI::Client.new(api_key: ENV["OPENAI_API_KEY"])
     response = client.chat(
       parameters: {
         model: "gpt-4o-mini",
@@ -18,7 +18,47 @@ class AiService
     response.dig("choices", 0, "message", "content")
   end
 
+  def stream_chat(messages, &block)
+    return mock_stream(messages, &block) if @use_mock
+
+    client = OpenAI::Client.new(api_key: ENV["OPENAI_API_KEY"])
+    collected = +""
+
+    client.chat(
+      parameters: {
+        model: "gpt-4o-mini",
+        messages: messages,
+        temperature: 0.7,
+        max_tokens: 1000,
+        stream: true
+      }
+    ) do |chunk, _index|
+      delta = chunk.dig("choices", 0, "delta", "content")
+      next unless delta
+
+      collected << delta
+      block.call(delta, collected)
+    end
+
+    collected
+  end
+
   private
+
+  def mock_stream(messages, &block)
+    response = mock_response(messages)
+    words = response.split(" ")
+    collected = +""
+
+    words.each_with_index do |word, i|
+      chunk = i.zero? ? word : " #{word}"
+      collected << chunk
+      block.call(chunk, collected)
+      sleep(0.03)
+    end
+
+    collected
+  end
 
   def mock_response(messages)
     last_message = messages.last[:content].downcase
