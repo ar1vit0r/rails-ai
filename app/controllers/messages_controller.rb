@@ -29,7 +29,7 @@ class MessagesController < ApplicationController
   end
 
   def stream_ai_response(conversation)
-    messages = [{ role: "system", content: "You are a helpful AI writing assistant. Be concise and helpful." }]
+    messages = [ { role: "system", content: "You are a helpful AI writing assistant. Be concise and helpful." } ]
     messages += conversation.history
 
     ai = AiService.new

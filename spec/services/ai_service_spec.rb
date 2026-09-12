@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe AiService do
   describe "#chat" do
     it "returns a response" do
-      messages = [{ role: "user", content: "Hello" }]
+      messages = [ { role: "user", content: "Hello" } ]
       response = described_class.new.chat(messages)
       expect(response).to be_a(String)
       expect(response).not_to be_empty
@@ -12,7 +12,7 @@ RSpec.describe AiService do
 
   describe "#stream_chat" do
     it "yields chunks and returns full text" do
-      messages = [{ role: "user", content: "Hello" }]
+      messages = [ { role: "user", content: "Hello" } ]
       chunks = []
       full_text = nil
 
@@ -27,7 +27,7 @@ RSpec.describe AiService do
     end
 
     it "builds complete text from chunks" do
-      messages = [{ role: "user", content: "Write a blog post" }]
+      messages = [ { role: "user", content: "Write a blog post" } ]
       collected = +""
 
       described_class.new.stream_chat(messages) do |_chunk, text|
