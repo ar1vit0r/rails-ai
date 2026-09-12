@@ -33,3 +33,8 @@ jobs:
         run: bundle exec rspec --exclude-pattern "spec/system/**/*"
         env:
           RAILS_ENV: test
+
+      - name: Lint and security audits
+        run: bin/ci
+        env:
+          RAILS_ENV: test
