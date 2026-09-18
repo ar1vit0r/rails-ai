@@ -1,21 +1,31 @@
-<%= link_to "← Back to conversations", conversations_path, class: "text-cyan-400 hover:underline mb-4 inline-block" %>
-
-<div class="bg-gray-800 border border-gray-700 rounded-lg p-4 mb-6">
-  <h1 class="text-xl font-bold text-gray-100"><%= @conversation.title %></h1>
-  <p class="text-sm text-gray-400"><%= @messages.count %> messages</p>
-</div>
-
-<%= turbo_stream_from @conversation %>
-
-<div id="messages" class="space-y-4 mb-6" data-controller="streaming">
-  <% @messages.each do |message| %>
-    <%= render partial: "messages/message", locals: { message: message } %>
-  <% end %>
-</div>
-
-<%= form_with model: @message, url: conversation_messages_path(@conversation), data: { action: "submit->streaming#submit" }, class: "bg-gray-800 border border-gray-700 rounded-lg p-4" do |f| %>
-  <div class="mb-3">
-    <%= f.text_area :content, rows: 3, placeholder: "Ask me anything...", class: "bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 w-full text-gray-100", autofocus: true, data: { streaming_target: "input" } %>
-  </div>
-  <%= f.submit "Send", class: "bg-cyan-600 text-white px-6 py-2 rounded-lg hover:bg-cyan-700 cursor-pointer", data: { streaming_target: "submit" } %>
+<% content_for :head do %>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Literata:ital,opsz,wght@0,7..72,400..700;1,7..72,400..700&display=swap">
 <% end %>
+
+<%= link_to "← Back to conversations", conversations_path, class: "text-gray-400 hover:text-gray-100 mb-4 inline-block" %>
+
+<article class="sheet">
+  <header class="sheet-head">
+    <h1><%= @conversation.title %></h1>
+    <p><%= pluralize(@messages.count, "message") %></p>
+  </header>
+
+  <%= turbo_stream_from @conversation %>
+
+  <div id="messages" class="thread" data-controller="streaming">
+    <% if @messages.empty? %>
+      <p class="thread-empty">No messages yet. Type below and the reply appears here.</p>
+    <% end %>
+    <% @messages.each do |message| %>
+      <%= render partial: "messages/message", locals: { message: message } %>
+    <% end %>
+  </div>
+
+  <%= form_with model: @message, url: conversation_messages_path(@conversation), data: { action: "submit->streaming#submit" }, class: "composer" do |f| %>
+    <%= f.label :content, "Your message", class: "sr-only" %>
+    <%= f.text_area :content, rows: 3, placeholder: "Describe what to write, or paste text to rewrite", autofocus: true, data: { streaming_target: "input" } %>
+    <%= f.submit "Send", data: { streaming_target: "submit" } %>
+  <% end %>
+</article>

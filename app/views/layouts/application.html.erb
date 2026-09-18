@@ -8,6 +8,7 @@
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <%= yield :head %>
   </head>
   <body class="bg-gray-900 text-gray-100">
     <nav class="bg-gray-800 border-b border-gray-700">

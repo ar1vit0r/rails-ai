@@ -8,3 +8,242 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+/* Chat view: a manuscript sheet. Your messages are typed in the left margin,
+   replies are set as text in the column beside them. */
+
+.sheet {
+  --paper: #eef0f5;
+  --ink: #1b1f3b;
+  --muted: #5d627c;
+  --mimeo: #5b3fa8;
+  --mimeo-dark: #4a3290;
+  --margin-rule: #d3a5ad;
+  --line: #c9cde0;
+  --pad: 1.25rem;
+  --margin-w: 14rem;
+  --gap: 2.5rem;
+
+  max-width: 64rem;
+  margin-inline: auto;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 3px;
+  font-family: "Literata", Georgia, "Times New Roman", serif;
+}
+
+.sheet-head {
+  padding: 1.75rem var(--pad) 1.25rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.sheet-head h1 {
+  font-size: 1.75rem;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.sheet-head p {
+  margin-top: 0.25rem;
+  font-size: 0.9375rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* Thread */
+
+.thread {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 1.5rem;
+  padding: 1.5rem var(--pad);
+}
+
+.thread-empty {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.thread-empty:not(:only-child) {
+  display: none;
+}
+
+.note {
+  font-family: "Courier Prime", "Courier New", monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--mimeo);
+  overflow-wrap: anywhere;
+}
+
+/* pre-wrap only on the text itself, so the ERB indentation around it doesn't render */
+p.note,
+.note .closed,
+.note p {
+  white-space: pre-wrap;
+}
+
+.note summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.note summary::-webkit-details-marker {
+  display: none;
+}
+
+.note summary:focus-visible {
+  outline: 2px solid var(--mimeo);
+  outline-offset: 2px;
+}
+
+.note .toggle {
+  display: block;
+  margin-top: 0.25rem;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.note:not([open]) .toggle::after {
+  content: "Show all";
+}
+
+.note[open] .toggle::after {
+  content: "Show less";
+}
+
+.note[open] .closed {
+  display: none;
+}
+
+.note p {
+  margin-top: 0.25rem;
+}
+
+.reply {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.stamp {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* One column: the typed message becomes a marked note above its reply. */
+.msg[data-role="user"] {
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--mimeo);
+}
+
+@media (min-width: 52rem) {
+  .sheet {
+    --pad: 2.5rem;
+  }
+
+  .thread {
+    grid-template-columns: var(--margin-w) minmax(0, 40rem);
+    column-gap: var(--gap);
+    /* the margin rule, centred in the gap between the two columns */
+    background: linear-gradient(var(--margin-rule), var(--margin-rule))
+      calc(var(--pad) + var(--margin-w) + var(--gap) / 2) 0 / 1px 100% no-repeat;
+  }
+
+  .thread-empty,
+  .msg[data-role="assistant"],
+  .msg[data-role="system"] {
+    grid-column: 2;
+  }
+
+  /* Grid auto-placement puts each reply on the same row as the message before it. */
+  .msg[data-role="user"] {
+    grid-column: 1;
+    align-self: start;
+    position: sticky;
+    top: 1rem;
+    padding-left: 0;
+    border-left: 0;
+    padding-top: 0.3rem;
+  }
+
+  .msg[data-role="user"]:has(details[open]) {
+    position: static;
+  }
+}
+
+/* Composer */
+
+.composer {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem var(--pad) 1.25rem;
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+  border-radius: 0 0 3px 3px;
+}
+
+.composer textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 0.625rem 0.75rem;
+  font-family: "Courier Prime", "Courier New", monospace;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--mimeo);
+  caret-color: var(--mimeo);
+  background: #f8f9fb;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  resize: vertical;
+}
+
+.composer textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
+.composer textarea:focus-visible {
+  outline: 2px solid var(--mimeo);
+  outline-offset: 1px;
+}
+
+.composer input[type="submit"] {
+  padding: 0.625rem 1.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--mimeo);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.composer input[type="submit"]:hover:not(:disabled) {
+  background: var(--mimeo-dark);
+}
+
+.composer input[type="submit"]:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.composer input[type="submit"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (min-width: 40rem) {
+  .composer {
+    grid-template-columns: 1fr auto;
+    align-items: end;
+  }
+}

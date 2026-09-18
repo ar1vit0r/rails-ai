@@ -1,9 +1,21 @@
-<div id="message_<%= message.id %>" class="<%= message.role == 'user' ? 'bg-cyan-900/30 border-cyan-700' : 'bg-gray-800 border-gray-700' %> border rounded-lg p-4">
-  <div class="flex items-center gap-2 mb-2">
-    <span class="font-medium <%= message.role == 'user' ? 'text-cyan-400' : 'text-green-400' %>">
-      <%= message.role == 'user' ? 'You' : 'AI' %>
-    </span>
-    <span class="text-xs text-gray-500"><%= message.created_at.strftime("%H:%M") %></span>
-  </div>
-  <p class="text-gray-200 whitespace-pre-wrap"><%= message.content %></p>
+<%# Placement is driven by data-role: user messages go in the margin, replies in the text column (see .thread in application.css). %>
+<div id="message_<%= message.id %>" class="msg" data-role="<%= message.role %>">
+  <% if message.role == "user" %>
+    <span class="sr-only">You:</span>
+    <% if message.content.to_s.length > 240 %>
+      <details class="note">
+        <summary>
+          <span class="closed"><%= truncate(message.content, length: 240) %></span>
+          <span class="toggle"></span>
+        </summary>
+        <p><%= message.content %></p>
+      </details>
+    <% else %>
+      <p class="note"><%= message.content %></p>
+    <% end %>
+  <% else %>
+    <span class="sr-only">Assistant:</span>
+    <p class="reply"><%= message.content %></p>
+  <% end %>
+  <time class="stamp" datetime="<%= message.created_at.iso8601 %>"><%= message.created_at.strftime("%H:%M") %></time>
 </div>
