@@ -68,3 +68,10 @@ Configured via `render.yaml` (Render Blueprints). Environment variables:
 | `RAILS_MASTER_KEY` | decrypts Rails credentials (set manually in Render) |
 | `OPENAI_API_KEY` | enables the real model; omit to run in mock mode |
 | `DATABASE_URL` | provisioned from the `rails-ai-db` database in `render.yaml` |
+
+## Roadmap
+
+Both items below were found by reading the code and have not been reproduced in a running app yet.
+
+- [ ] Deliver live updates to the browser: nothing on the page subscribes to the `conversation_<id>` broadcasts (`turbo_stream_from` listens on a different stream), so new messages and streamed replies would only show after a reload
+- [ ] Connect the message form to the `streaming` Stimulus controller: the form sits outside the element that carries `data-controller="streaming"`, so `streaming#submit` never runs and the form submits as a plain Turbo form
