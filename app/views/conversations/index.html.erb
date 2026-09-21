@@ -1,23 +1,28 @@
-<div class="flex justify-between items-center mb-6">
-  <h1 class="text-2xl font-bold text-gray-100">Conversations</h1>
-  <%= link_to "New Conversation", new_conversation_path, class: "bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700" %>
-</div>
+<article class="sheet">
+  <header class="sheet-head sheet-head-row">
+    <div>
+      <h1>Conversations</h1>
+      <% if @conversations.any? %>
+        <p><%= pluralize(@conversations.size, "conversation") %></p>
+      <% end %>
+    </div>
+    <%= link_to "New conversation", new_conversation_path, class: "btn" %>
+  </header>
 
-<% if @conversations.any? %>
-  <div class="space-y-3">
-    <% @conversations.each do |conversation| %>
-      <div class="bg-gray-800 border border-gray-700 rounded-lg p-4 hover:border-cyan-500 transition flex justify-between items-center">
-        <%= link_to conversation_path(conversation), class: "flex-1" do %>
-          <h3 class="font-semibold text-gray-100"><%= conversation.title %></h3>
-          <p class="text-sm text-gray-400"><%= conversation.messages.count %> messages | <%= conversation.updated_at.strftime("%b %d, %Y %H:%M") %></p>
-        <% end %>
-        <%= button_to "Delete", conversation_path(conversation), method: :delete, class: "text-red-400 hover:text-red-300 text-sm", data: { turbo_confirm: "Are you sure?" } %>
-      </div>
+  <ul class="thread">
+    <% if @conversations.empty? %>
+      <li class="thread-empty">No conversations yet. Start one with "New conversation".</li>
     <% end %>
-  </div>
-<% else %>
-  <div class="bg-gray-800 border border-gray-700 rounded-lg p-8 text-center">
-    <p class="text-gray-400 mb-4">No conversations yet. Start one to chat with AI!</p>
-    <%= link_to "New Conversation", new_conversation_path, class: "bg-cyan-600 text-white px-6 py-2 rounded-lg hover:bg-cyan-700" %>
-  </div>
-<% end %>
+    <% @conversations.each do |conversation| %>
+      <li class="convo">
+        <p class="note"><%= conversation.updated_at.strftime("%b %d, %Y %H:%M") %></p>
+        <div>
+          <%= link_to conversation.title, conversation_path(conversation), class: "convo-title" %>
+          <span class="stamp"><%= pluralize(@message_counts.fetch(conversation.id, 0), "message") %></span>
+          <%= button_to "Delete", conversation_path(conversation), method: :delete, class: "convo-delete",
+                data: { turbo_confirm: "Delete this conversation and its messages? This cannot be undone." } %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</article>

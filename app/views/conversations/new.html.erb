@@ -1,13 +1,18 @@
-<%= link_to "← Back to conversations", conversations_path, class: "text-cyan-400 hover:underline mb-4 inline-block" %>
+<article class="sheet auth">
+  <header class="sheet-head">
+    <h1>New conversation</h1>
+    <p>Give it a title so you can find it later.</p>
+  </header>
 
-<h1 class="text-2xl font-bold text-gray-100 mb-6">New Conversation</h1>
-
-<div class="bg-gray-800 border border-gray-700 rounded-lg p-6 max-w-lg">
-  <%= form_with url: conversations_path, class: "space-y-4" do |f| %>
-    <div>
-      <%= f.label :title, "Conversation Title", class: "block text-sm font-medium text-gray-300" %>
-      <%= f.text_field :title, placeholder: "e.g., Blog post ideas", class: "bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 w-full text-gray-100" %>
+  <%= form_with url: conversations_path, class: "auth-form" do |f| %>
+    <div class="field">
+      <%= f.label :title, "Title" %>
+      <%= f.text_field :title, placeholder: "Blog post ideas", autofocus: true, required: true %>
     </div>
-    <%= f.submit "Start Conversation", class: "bg-cyan-600 text-white px-6 py-2 rounded-lg hover:bg-cyan-700 cursor-pointer" %>
+    <%= f.submit "Start conversation" %>
   <% end %>
-</div>
+
+  <footer class="auth-links">
+    <p><%= link_to "Back to conversations", conversations_path %></p>
+  </footer>
+</article>

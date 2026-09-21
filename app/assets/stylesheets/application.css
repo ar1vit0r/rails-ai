@@ -217,7 +217,10 @@ p.note,
   outline-offset: 1px;
 }
 
-.composer input[type="submit"] {
+/* Shared by every primary button: composer send, auth-form submit, .btn links. */
+.composer input[type="submit"],
+.auth-form input[type="submit"],
+.btn {
   padding: 0.625rem 1.5rem;
   font-family: inherit;
   font-size: 1rem;
@@ -228,11 +231,15 @@ p.note,
   cursor: pointer;
 }
 
-.composer input[type="submit"]:hover:not(:disabled) {
+.composer input[type="submit"]:hover:not(:disabled),
+.auth-form input[type="submit"]:hover,
+.btn:hover {
   background: var(--mimeo-dark);
 }
 
-.composer input[type="submit"]:focus-visible {
+.composer input[type="submit"]:focus-visible,
+.auth-form input[type="submit"]:focus-visible,
+.btn:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
@@ -260,8 +267,63 @@ p.note,
   }
 }
 
-/* Auth pages: the same sheet, narrower. Labels sit in the margin, answers are typed beside them.
-   The input and button looks duplicate the composer's; fold into shared selectors if a third form appears. */
+/* Conversation list: date in the margin, title in the text column (reuses .thread). */
+
+.sheet-head-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+}
+
+.btn {
+  display: inline-block;
+}
+
+.convo-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.convo-title:hover {
+  text-decoration: underline;
+}
+
+.convo-title:focus-visible,
+.convo-delete:focus-visible {
+  outline: 2px solid var(--mimeo);
+  outline-offset: 2px;
+}
+
+.convo-delete {
+  margin-top: 0.25rem;
+  padding: 0;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-style: italic;
+  color: var(--muted);
+  text-decoration: underline;
+  background: none;
+  cursor: pointer;
+}
+
+.convo-delete:hover {
+  color: var(--error);
+}
+
+@media (min-width: 52rem) {
+  .convo {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+  }
+}
+
+/* Auth pages and other short forms: the same sheet, narrower. Labels sit in the margin, answers are typed beside them.
+   The input look duplicates the composer textarea's; fold into a shared selector if a third form appears. */
 
 .sheet.auth {
   --margin-w: 10rem;
@@ -292,7 +354,8 @@ p.note,
 }
 
 .field input[type="email"],
-.field input[type="password"] {
+.field input[type="password"],
+.field input[type="text"] {
   display: block;
   width: 100%;
   min-width: 0;
@@ -326,23 +389,6 @@ p.note,
 
 .auth-form input[type="submit"] {
   justify-self: start;
-  padding: 0.625rem 1.5rem;
-  font-family: inherit;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--paper);
-  background: var(--mimeo);
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.auth-form input[type="submit"]:hover {
-  background: var(--mimeo-dark);
-}
-
-.auth-form input[type="submit"]:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 2px;
 }
 
 .auth #error_explanation {
