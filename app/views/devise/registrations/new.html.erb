@@ -1,25 +1,36 @@
-<div class="max-w-md mx-auto">
-  <h2 class="text-2xl font-bold text-gray-100 mb-6">Sign up</h2>
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-4" }) do |f| %>
+<% content_for :head do %>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Literata:ital,opsz,wght@0,7..72,400..700;1,7..72,400..700&display=swap">
+<% end %>
+
+<article class="sheet auth">
+  <header class="sheet-head">
+    <h1>Create an account</h1>
+    <p>You get a blank sheet and an assistant to write with.</p>
+  </header>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "auth-form" }) do |f| %>
     <%= render "devise/shared/error_messages", resource: resource %>
-    <div>
-      <%= f.label :email, class: "block text-sm font-medium text-gray-300" %>
-      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 w-full text-gray-100" %>
+    <div class="field">
+      <%= f.label :email %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
     </div>
-    <div>
-      <%= f.label :password, class: "block text-sm font-medium text-gray-300" %>
+    <div class="field">
+      <%= f.label :password %>
+      <%= f.password_field :password, autocomplete: "new-password", aria: { describedby: ("password-hint" if @minimum_password_length) } %>
       <% if @minimum_password_length %>
-        <span class="text-xs text-gray-500">(<%= @minimum_password_length %> characters minimum)</span>
+        <span class="hint" id="password-hint"><%= @minimum_password_length %> characters minimum</span>
       <% end %>
-      <%= f.password_field :password, autocomplete: "new-password", class: "bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 w-full text-gray-100" %>
     </div>
-    <div>
-      <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-300" %>
-      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 w-full text-gray-100" %>
+    <div class="field">
+      <%= f.label :password_confirmation, "Confirm password" %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
     </div>
-    <%= f.submit "Sign up", class: "bg-cyan-600 text-white px-6 py-2 rounded-lg hover:bg-cyan-700 cursor-pointer w-full" %>
+    <%= f.submit "Create account" %>
   <% end %>
-  <div class="mt-4 text-sm text-gray-400">
-    <%= link_to "Log in", new_session_path(resource_name), class: "text-cyan-400 hover:underline" %>
-  </div>
-</div>
+
+  <footer class="auth-links">
+    <p>Already have an account? <%= link_to "Log in", new_session_path(resource_name) %></p>
+  </footer>
+</article>

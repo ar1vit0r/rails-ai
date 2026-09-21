@@ -247,3 +247,152 @@ p.note,
     align-items: end;
   }
 }
+
+/* Auth pages: the same sheet, narrower. Labels sit in the margin, answers are typed beside them.
+   The input and button looks duplicate the composer's; fold into shared selectors if a third form appears. */
+
+.sheet.auth {
+  --margin-w: 10rem;
+  --gap: 1.5rem;
+  --error: #8f2a3c;
+
+  max-width: 40rem;
+}
+
+.auth-form {
+  display: grid;
+  row-gap: 1.25rem;
+  padding: 1.5rem var(--pad);
+}
+
+.field {
+  display: grid;
+  row-gap: 0.375rem;
+}
+
+.field label {
+  font-weight: 600;
+}
+
+.field .hint {
+  font-size: 0.8125rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.field input[type="email"],
+.field input[type="password"] {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 0.625rem 0.75rem;
+  font-family: "Courier Prime", "Courier New", monospace;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--mimeo);
+  caret-color: var(--mimeo);
+  background: #f8f9fb;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+}
+
+.field input:focus-visible {
+  outline: 2px solid var(--mimeo);
+  outline-offset: 1px;
+}
+
+.field-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.field-check input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--mimeo);
+}
+
+.auth-form input[type="submit"] {
+  justify-self: start;
+  padding: 0.625rem 1.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--mimeo);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.auth-form input[type="submit"]:hover {
+  background: var(--mimeo-dark);
+}
+
+.auth-form input[type="submit"]:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.auth #error_explanation {
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--error);
+}
+
+.auth #error_explanation h2 {
+  font-weight: 600;
+  color: var(--error);
+}
+
+.auth-links {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1rem var(--pad) 1.5rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.9375rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.auth-links a {
+  color: var(--mimeo);
+  font-style: normal;
+  text-decoration: underline;
+}
+
+.auth-links a:focus-visible {
+  outline: 2px solid var(--mimeo);
+  outline-offset: 2px;
+}
+
+@media (min-width: 40rem) {
+  .auth-form {
+    /* the margin rule, same offset math as .thread */
+    background: linear-gradient(var(--margin-rule), var(--margin-rule))
+      calc(var(--pad) + var(--margin-w) + var(--gap) / 2) 0 / 1px 100% no-repeat;
+  }
+
+  .field {
+    grid-template-columns: var(--margin-w) minmax(0, 1fr);
+    column-gap: var(--gap);
+    align-items: start;
+  }
+
+  .field label {
+    padding-top: 0.7rem;
+  }
+
+  .field .hint {
+    grid-column: 2;
+  }
+
+  .field-check,
+  .auth-form input[type="submit"],
+  .auth #error_explanation {
+    margin-left: calc(var(--margin-w) + var(--gap));
+  }
+
+  .auth-links {
+    padding-left: calc(var(--pad) + var(--margin-w) + var(--gap));
+  }
+}
