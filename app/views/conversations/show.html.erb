@@ -1,14 +1,12 @@
 <%= link_to "← Back to conversations", conversations_path, class: "text-gray-400 hover:text-gray-100 mb-4 inline-block" %>
 
-<article class="sheet">
+<article class="sheet" data-controller="streaming" data-streaming-conversation-id-value="<%= @conversation.id %>">
   <header class="sheet-head">
     <h1><%= @conversation.title %></h1>
-    <p><%= pluralize(@messages.count, "message") %></p>
+    <p data-streaming-target="count"><%= pluralize(@messages.count, "message") %></p>
   </header>
 
-  <%= turbo_stream_from @conversation %>
-
-  <div id="messages" class="thread" data-controller="streaming">
+  <div id="messages" class="thread" data-streaming-target="thread">
     <% if @messages.empty? %>
       <p class="thread-empty">No messages yet. Type below and the reply appears here.</p>
     <% end %>
@@ -21,5 +19,6 @@
     <%= f.label :content, "Your message", class: "sr-only" %>
     <%= f.text_area :content, rows: 3, placeholder: "Describe what to write, or paste text to rewrite", autofocus: true, data: { streaming_target: "input" } %>
     <%= f.submit "Send", data: { streaming_target: "submit" } %>
+    <p class="composer-error" role="alert" hidden data-streaming-target="error">Message not sent. Your text is back in the box, so you can press Send again.</p>
   <% end %>
 </article>

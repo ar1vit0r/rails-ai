@@ -20,6 +20,7 @@
   --mimeo-dark: #4a3290;
   --margin-rule: #d3a5ad;
   --line: #c9cde0;
+  --error: #8f2a3c;
   --pad: 1.25rem;
   --margin-w: 14rem;
   --gap: 2.5rem;
@@ -236,6 +237,17 @@ p.note,
   outline-offset: 2px;
 }
 
+.composer-error {
+  grid-column: 1 / -1;
+  font-size: 0.9375rem;
+  color: var(--error);
+}
+
+/* clears the sticky composer when a new message is scrolled into view */
+.msg {
+  scroll-margin-bottom: 9rem;
+}
+
 .composer input[type="submit"]:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -254,7 +266,6 @@ p.note,
 .sheet.auth {
   --margin-w: 10rem;
   --gap: 1.5rem;
-  --error: #8f2a3c;
 
   max-width: 40rem;
 }
