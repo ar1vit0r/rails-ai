@@ -1,42 +1,40 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<article class="sheet auth">
+  <header class="sheet-head">
+    <h1>Your account</h1>
+    <p>Change your email or password.</p>
+  </header>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-
-  <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
-  </div>
-
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "auth-form" }) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
+    <div class="field">
+      <%= f.label :email %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+    </div>
+    <div class="field">
+      <%= f.label :password, "New password" %>
+      <%= f.password_field :password, autocomplete: "new-password", aria: { describedby: "password-hint" } %>
+      <span class="hint" id="password-hint">Leave blank to keep your current password.<%= " #{@minimum_password_length} characters minimum." if @minimum_password_length %></span>
+    </div>
+    <div class="field">
+      <%= f.label :password_confirmation, "Confirm password" %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+    </div>
+    <div class="field">
+      <%= f.label :current_password, "Current password" %>
+      <%= f.password_field :current_password, autocomplete: "current-password", aria: { describedby: "current-password-hint" } %>
+      <span class="hint" id="current-password-hint">Required to save any change.</span>
+    </div>
+    <%= f.submit "Save changes" %>
   <% end %>
 
-  <div class="field">
-    <p><%= f.label :password %> <i>(leave blank if you don't want to change it)</i></p>
-    <p><%= f.password_field :password, autocomplete: "new-password" %></p>
-    <% if @minimum_password_length %>
-      <p><em><%= @minimum_password_length %> characters minimum</em></p>
-    <% end %>
-  </div>
+  <section class="auth-danger">
+    <h2>Delete account</h2>
+    <p>This also deletes all your conversations and cannot be undone.</p>
+    <%= button_to "Delete my account", registration_path(resource_name), method: :delete,
+          data: { turbo_confirm: "Delete your account and all your conversations? This cannot be undone." } %>
+  </section>
 
-  <div class="field">
-    <p><%= f.label :password_confirmation %></p>
-    <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
-  </div>
-
-  <div class="field">
-    <p><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i></p>
-    <p><%= f.password_field :current_password, autocomplete: "current-password" %></p>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Update" %>
-  </div>
-<% end %>
-
-<h3>Cancel my account</h3>
-
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
-
-<%= link_to "Back", :back %>
+  <footer class="auth-links">
+    <p><%= link_to "Back to conversations", root_path %></p>
+  </footer>
+</article>

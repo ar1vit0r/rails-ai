@@ -344,6 +344,45 @@ p.note,
   color: var(--error);
 }
 
+.auth-danger {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem var(--pad) 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.auth-danger h2 {
+  font-weight: 600;
+}
+
+.auth-danger p {
+  font-size: 0.9375rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.auth-danger button {
+  padding: 0.625rem 1.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--error);
+  background: transparent;
+  border: 1px solid var(--error);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.auth-danger button:hover {
+  color: var(--paper);
+  background: var(--error);
+}
+
+.auth-danger button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
 .auth-links {
   display: grid;
   gap: 0.25rem;
@@ -392,7 +431,8 @@ p.note,
     margin-left: calc(var(--margin-w) + var(--gap));
   }
 
-  .auth-links {
+  .auth-links,
+  .auth-danger {
     padding-left: calc(var(--pad) + var(--margin-w) + var(--gap));
   }
 }
