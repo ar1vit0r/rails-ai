@@ -71,7 +71,7 @@ Configured via `render.yaml` (Render Blueprints). Environment variables:
 
 ## Roadmap
 
-Both items below were found by reading the code and have not been reproduced in a running app yet.
+Both items below are fixed and were checked end to end in a running app (mock mode).
 
-- [ ] Deliver live updates to the browser: nothing on the page subscribes to the `conversation_<id>` broadcasts (`turbo_stream_from` listens on a different stream), so new messages and streamed replies would only show after a reload
-- [ ] Connect the message form to the `streaming` Stimulus controller: the form sits outside the element that carries `data-controller="streaming"`, so `streaming#submit` never runs and the form submits as a plain Turbo form
+- [x] Deliver live updates to the browser: the `streaming` controller subscribes to `conversation_<id>` and applies each broadcast to the thread
+- [x] Connect the message form to the `streaming` Stimulus controller: `data-controller="streaming"` now wraps the whole conversation sheet, form included
